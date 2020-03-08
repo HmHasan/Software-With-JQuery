@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+    <title>Online Shop</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="display-4 text-center">Hat <span class="text-danger">Bazar</span></h2>
+        <p class="text-center"><span class="text-danger">Your Trust</span>  | Our Inspiration</p>
+        <form action="" id="product_form">
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="product">product</label>
+                    <input type="text" class="form-control" id="product" name="product">
+                    <small class="text-danger d-none" id="product_n"></small>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" class="form-control" id="price" name="price">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" value="">
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="total">Total</label>
+                    <input type="text" class="form-control" id="total" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="">&nbsp;</label>
+                    <input type="button" class="form-control btn btn-success" id="save" value="save">
+                </div>
+            </div>
+        </div>
+    </form>
+    <table class="table table-dark table-bordered table-hover">
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        <tbody id="ptable">
+
+        </tbody>
+    </table>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js""></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    
+    <script>
+        $(document).ready(function(){
+            $("#product_form").validate({
+              rules:{
+                  price:{
+                      number:true,
+                  },
+
+                  product:{
+                        required:true,
+                  },
+
+                  quantity:{
+                      required:true,
+                  }
+
+              },
+            });
+
+            $("#product").focusout(function(){
+                var product=$("#product").val();
+                var require=/^[A-Za-z]+$/;
+                if(product.match(require))
+                {
+                    return true;
+                }
+                else
+                {
+                    $("#product_n").removeClass("d-none");
+                    $("#product_n").text("Please Type Only Charecter");
+                }
+
+            });
+
+            $("#save").click(function(){
+                add_product_table();
+            });
+
+         $("#quantity").keyup(function(e){
+             if(e.keyCode==13)
+             {
+                add_product_table();
+             }
+            var fprice=parseFloat($("#price").val());
+            var fquantity=parseFloat($("#quantity").val());
+            ftotal=fprice*fquantity;
+            if(!isNaN(ftotal))
+            {
+                $("#total").val(ftotal);
+            }
+            else
+            {
+                $("#total").val("");
+            }
+           
+         });
+
+         function add_product_table()
+         {
+            var product=$("#product").val();
+                var price=$("#price").val();
+                var quantity=$("#quantity").val();
+                var total=$("#total").val();
+                if(quantity=="")
+                {
+                    return;
+                }
+                var prow='<tr><td>'+product+'</td><td>'+price+'</td><td>'+quantity+'</td><td>'+total+'</td><td><input type="button" value="Delete" class="btn btn-danger pdel"></td></tr>'
+            
+             $("#ptable").append(prow);
+             $("#product").val("");
+             $("#price").val("");
+             $("#quantity").val("");
+             $("#product").val("");
+             $("#total").val("");
+             $("#product").focus();
+         }
+
+         $("body").on("click",".pdel",function(e){
+            // $(this).parent().parent().remove(); on way
+            $(this).closest('tr').remove();
+         });
+
+        });
+    </script>
+</body>
+</html>
